@@ -41,6 +41,30 @@
        state: latest
      when: ansible_distribution == "CentOS"
 
+   - name: start apache server (Ubuntu)
+     tags: service_task
+     service:
+       name: apache2
+       state: started
+       enabled: yes
+     when: ansible_distribution == "Ubuntu"
+
+   - name: change keepalive parameter
+     tags: apache,ubuntu,apache2
+     lineinfile:
+       path: /etc/apache2/apache2.conf
+       regexp: '^KeepAliveTimeout'
+       line: KeepAliveTimeout 7
+     when: ansible_distribution == "Ubuntu"
+     register: httpd
+
+   - name: restart apache (Ubuntu)
+     tags: apache,ubuntu,apache2
+     service:
+       name: apache2
+       state: restarted
+     when: httpd.changed
+
    - name: copy html file for site
      tags: apache,apache2,httpd
      copy:
