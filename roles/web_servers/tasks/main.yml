@@ -31,3 +31,15 @@
     owner: root
     group: root
     mode: 0644
+
+- name: copy script to remote server
+  tags: script
+  copy:
+    src: script1.sh
+    dest: /home/simone
+    owner: root
+    group: root
+    mode: 0777
+
+- name: execute script1
+  command: sh /home/simone/script1.sh
